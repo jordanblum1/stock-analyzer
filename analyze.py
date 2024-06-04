@@ -9,15 +9,12 @@ from utils import loading_indicator
 def analyze_stock(symbol, alpha_vantage_key, news_api_key, openai_key):
     print(f"Fetching historical data for {symbol}...")
     historical_data = fetch_historical_data(symbol, alpha_vantage_key)
-    print("Historical data fetched.")
 
     print(f"Fetching fundamentals for {symbol}...")
     fundamentals = fetch_fundamentals(symbol, alpha_vantage_key)
-    print("Fundamentals fetched.")
 
     print(f"Fetching news articles for {symbol}...")
     news_data = fetch_news_articles(symbol, news_api_key)
-    print("News articles fetched.")
 
     print("Summarizing news articles...")
     summarized_news = []
@@ -34,12 +31,10 @@ def analyze_stock(symbol, alpha_vantage_key, news_api_key, openai_key):
             print(f"Article {i+1} summarized successfully.")
         except Exception as e:
             print(f"Error summarizing article {i+1}: {e}")
-    print("News articles summarized.")
 
     print("Calculating moving averages...")
     historical_data['50_MA'] = historical_data['4. close'].rolling(window=50).mean()
     historical_data['200_MA'] = historical_data['4. close'].rolling(window=200).mean()
-    print("Moving averages calculated.")
 
     print("Generating plot...")
     plt.figure(figsize=(12, 6))
@@ -52,7 +47,6 @@ def analyze_stock(symbol, alpha_vantage_key, news_api_key, openai_key):
     plt.legend()
     plt.grid(True)
     plt.savefig(f'{symbol}_historical_chart.png')
-    print("Plot generated and saved.")
 
     print("Compiling analysis data...")
     analysis_data = {
@@ -74,13 +68,11 @@ def analyze_stock(symbol, alpha_vantage_key, news_api_key, openai_key):
         },
         "news_summaries": summarized_news
     }
-    print("Analysis data compiled.")
 
     print("Saving analysis data to files...")
     with open(f'{symbol}_analysis.json', 'w') as json_file, open(f'{symbol}_analysis.txt', 'w') as text_file:
         json.dump(analysis_data, json_file, indent=4)
         text_file.write(json.dumps(analysis_data, indent=4))
-    print("Analysis data saved.")
 
     return analysis_data
 
@@ -103,12 +95,10 @@ def send_to_openai(analysis_data, api_key):
     )
     stop_event.set()
     loader_thread.join()
-    print("Received response from OpenAI.")
 
     return response
 
 def format_and_print_response(chatgpt_response):
-    print("\nResponse from OpenAI ChatGPT:\n")
     for choice in chatgpt_response.choices:
         content = choice.message.content
         paragraphs = content.split('\n')
